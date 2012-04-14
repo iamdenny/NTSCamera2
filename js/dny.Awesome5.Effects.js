@@ -3,7 +3,7 @@ dny.Awesome5.Effects = jindo.$Class({
 	_nCount : null,
 	
 	$init : function(){
-		this._nCount = 14;
+		this._nCount = 13;
 	},
 	
 	getCount : function(){
@@ -35,10 +35,10 @@ dny.Awesome5.Effects = jindo.$Class({
 		case 7 : sName = "Glow"; break;
 		case 8 : sName = "Lighten"; break;
 		case 9 : sName = "Mosaic"; break;
-		case 10: sName = "Pointillize"; break;
-		case 11: sName = "Posterize"; break;
-		case 12: sName = "Sharpen"; break;
-		case 13: sName = "Solarize"; break;
+		//case 10: sName = "Pointillize"; break;
+		case 10: sName = "Posterize"; break;
+		case 11: sName = "Sharpen"; break;
+		case 12: sName = "Solarize"; break;
 		}
 		return sName;
 	},

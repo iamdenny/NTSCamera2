@@ -16,10 +16,14 @@ dny.Awesome5 = jindo.$Class({
 	
 	_oLastCanvas : null,
 	_nRotationDegree : null,
+	_htClientSize : null,
 	
-	$init : function(){              
+	$init : function(){
     	this._bDeviceReady = true;
     	this._oCamera = navigator.camera;
+    	
+    	this._htClientSize = jindo.$Document(document).clientSize();
+    	this._htClientSize.height = this._htClientSize.height - 60; 
 	    
 	    // set contents
 	    this._welMainContent = jindo.$Element("main-content");
@@ -37,8 +41,18 @@ dny.Awesome5 = jindo.$Class({
 	    this._welSelectGallery = jindo.$Element("select-gallery");
 	    this._wfSelectGalery = jindo.$Fn(this._onSelectGalleryClick, this).attach(this._welSelectGallery, "click");
 	    
-	    this._initEvents();                          
-        
+	    this._initWindowSize();
+	    
+	    this._initEvents();
+	},
+	
+	_initWindowSize : function(){
+		var self = this;
+		var f = jindo.$Fn(function(e){
+			//self._htClientSize = jindo.$Document(document).clientSize();
+		}, this).bind();
+		// bind함
+		jindo.m.bindRotate(f);
 	},
 	
 	_initEvents : function(){
@@ -209,22 +223,46 @@ dny.Awesome5 = jindo.$Class({
 		var self = this;
 		
 		welContent.empty();
-		
-		//
-		var oCanvas = document.createElement('canvas');
-		oCanvas.width = 400;
-		oCanvas.height = 300;
-		var oContext = oCanvas.getContext("2d");	
-		
+
 		this._oGalleryImage = null;
 		this._oGalleryImage = document.createElement('img');
 		this._oGalleryImage.src = sImageURI;
 		
+		var oCanvas = document.createElement('canvas');
+		var oContext = oCanvas.getContext("2d");
+		
 		this._oGalleryImage.onload = function(){
+			var htAdjustedSize = self._getAdjustedSize(self._oGalleryImage.width, self._oGalleryImage.height);
+			oCanvas.width = htAdjustedSize.width;
+			oCanvas.height = htAdjustedSize.height;
+			
 			oContext.drawImage(self._oGalleryImage, 0, 0, oCanvas.width, oCanvas.height);
 			welContent.append(oCanvas);
+			
+			var nMarginTop = (htAdjustedSize.height / 2 + 20) * -1;
+			self._welMainContent.css({position:'absolute', top:'50%', marginTop: nMarginTop + 'px'});
 		};
 		this._oLastCanvas = oCanvas; 
+	},
+	
+	_getAdjustedSize : function(nWidth, nHeight){
+		
+		var htSize = {};
+		
+		// 인자값 비율 계산
+		var nArgRatio = 0;
+		nArgRatio = nWidth / nHeight;
+		
+		// width 기준
+		if(this._htClientSize.width / nArgRatio >= this._htClientSize.height){
+			htSize.width = this._htClientSize.height * nArgRatio;
+			htSize.height = this._htClientSize.height;
+		}else{
+			htSize.width = this._htClientSize.width;
+			htSize.height = this._htClientSize.width / nArgRatio;
+		}
+		
+		return htSize;
 	},
 	
 	_printEffectsToContent : function(){
@@ -235,8 +273,8 @@ dny.Awesome5 = jindo.$Class({
 		var nEffectsCount = oEffects.getCount();
 		for(var i=0; i<nEffectsCount; i++){
 			var oCanvas = document.createElement('canvas');
-			oCanvas.width = 100; 
-			oCanvas.height = 75;
+			oCanvas.width = this._htClientSize.width / 3; 
+			oCanvas.height = oCanvas.width / 1.35;
 			oCanvas.effectKey = oEffects.getKey(i);
 			oCanvas.effectName = oEffects.getName(i);
 			var oContext = oCanvas.getContext("2d");
@@ -265,8 +303,9 @@ dny.Awesome5 = jindo.$Class({
 		var oEffects = new dny.Awesome5.Effects();
 		
 		var oCanvas = document.createElement('canvas');
-		oCanvas.width = 400;
-		oCanvas.height = 300;
+		var htAdjustedSize = this._getAdjustedSize(this._oGalleryImage.width, this._oGalleryImage.height);
+		oCanvas.width = htAdjustedSize.width;
+		oCanvas.height = htAdjustedSize.height;
 		var oContext = oCanvas.getContext("2d");	
 		
 		oContext.drawImage(this._oGalleryImage, 0, 0, oCanvas.width, oCanvas.height);
@@ -275,18 +314,25 @@ dny.Awesome5 = jindo.$Class({
 		
 		this._welEffectDetailContent.append(oCanvas);
 		
+		var nMarginTop = (htAdjustedSize.height / 2 + 120) * -1;
+		this._welEffectDetailContent.css({position:'absolute', top:'50%', marginTop: nMarginTop + 'px'});
+		
 		this._oLastCanvas = oCanvas; 
 	},
 	
 	_printTheImageToContent : function(welContent){
 		//
 		var oCanvas = document.createElement('canvas');
-		oCanvas.width = 400;
-		oCanvas.height = 300;
+		var htAdjustedSize = this._getAdjustedSize(this._oGalleryImage.width, this._oGalleryImage.height);
+		oCanvas.width = htAdjustedSize.width;
+		oCanvas.height = htAdjustedSize.height;
 		var oContext = oCanvas.getContext("2d");	
 		
 		oContext.drawImage(this._oGalleryImage, 0, 0, oCanvas.width, oCanvas.height);
 		welContent.append(oCanvas);
+		
+		var nMarginTop = (htAdjustedSize.height / 2 + 120) * -1;
+		welContent.css({position:'absolute', top:'50%', marginTop: nMarginTop + 'px'});
 		
 		this._oLastCanvas = oCanvas;
 		this._nRotationDegree = 0;
@@ -297,8 +343,10 @@ dny.Awesome5 = jindo.$Class({
         var canvas = this._oLastCanvas; 
         var canvasContext = canvas.getContext("2d"); 
         
-        var width = 400;
-        var height = 300;
+        var htAdjustedSize = this._getAdjustedSize(this._oGalleryImage.width, this._oGalleryImage.height);
+		
+        var width = htAdjustedSize.width;
+        var height = htAdjustedSize.height;
         
         this._nRotationDegree = (this._nRotationDegree + nDegree) % 360;
         switch(this._nRotationDegree) { 
