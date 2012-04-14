@@ -14,7 +14,8 @@
 		<script src="jquery.mobile/jquery.Jcrop.js" type="text/javascript"></script>
 		<link rel="stylesheet" href="css/jquery.Jcrop.css" type="text/css" />
 		
-		<script type="text/javascript" charset="utf-8" src="cordova-android-1.6.0.js"></script>
+        <!-- 아이폰/안드로이드 분기 처리 -->
+		<script type="text/javascript" charset="utf-8" src="cordova-ios-1.6.0.js"></script>
 		
 		<script type="text/javascript" charset="utf-8" src="jindo/jindo.desktop.all.ns.js"></script>
 		
@@ -45,12 +46,12 @@
 		<section id="main" data-role="page" data-fullscreen="true">
 			<header data-role="header" data-position="fixed">
 				<a id="take-a-photo" data-icon="custom-camera" data-theme="b">사진찍기</a>
-				<h1>NTS Camera</h1>
+				<h1>NTS Camera2</h1>
 				<a id="select-gallery" data-icon="custom-gallery" data-theme="b">갤러리</a>
 			</header>
 			
 			<div id="main-content" data-role="content" class="content">
-                Hello, NHN Technolgoy Services
+                <p align='center'>Hello, NHN Technolgoy Services</p>
 			</div>
 			
 			<footer data-role="footer" data-position="fixed">

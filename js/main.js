@@ -18,7 +18,7 @@ $(document).ready(function() {
 		*/
 	});
 	
-
+    
 	document.addEventListener("orientationchange", function(event){
 		var windowOrientation = window.orientation;
 		if(windowOrientation === 0 || windowOrientation === 180){
@@ -29,4 +29,5 @@ $(document).ready(function() {
 			alert("어중간");
 		}
 	}, false);
+    
 });

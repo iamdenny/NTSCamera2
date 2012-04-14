@@ -11,7 +11,7 @@ header{background:url(../images/header_bg.png) 0 0 repeat-x transparent}
 .ui-icon-custom-share {background:url(../images/ui-icon-custom-share.png) 0 0 no-repeat;border-radius:0;}
 .ui-icon-custom-delete {background:url(../images/ui-icon-custom-delete.png) 0 0 no-repeat;border-radius:0;}
 
-#main-content {padding:100px 0;margin:auto;}
+#main-content {margin:auto;position:absolute;top:50%}
 
 #effect-content {margin:0;padding:0;list-style:none}
 #effect-content li {float:left;margin:0;padding:0}

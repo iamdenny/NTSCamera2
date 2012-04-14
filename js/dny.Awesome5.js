@@ -23,7 +23,8 @@ dny.Awesome5 = jindo.$Class({
     	this._oCamera = navigator.camera;
     	
     	this._htClientSize = jindo.$Document(document).clientSize();
-    	this._htClientSize.height = this._htClientSize.height - 60; 
+//        alert(this._htClientSize.width + " :: " + this._htClientSize.height);
+    	//this._htClientSize.height = this._htClientSize.height - 60; 
 	    
 	    // set contents
 	    this._welMainContent = jindo.$Element("main-content");
@@ -238,9 +239,17 @@ dny.Awesome5 = jindo.$Class({
 			
 			oContext.drawImage(self._oGalleryImage, 0, 0, oCanvas.width, oCanvas.height);
 			welContent.append(oCanvas);
-			
-			var nMarginTop = (htAdjustedSize.height / 2 + 20) * -1;
-			self._welMainContent.css({position:'absolute', top:'50%', marginTop: nMarginTop + 'px'});
+                            
+            if(htAdjustedSize.bWidthIsLonger){
+                var nMarginTop = (htAdjustedSize.height / 2) * -1;
+//                alert(htAdjustedSize.width + " :: " + htAdjustedSize.height + " ::1 " + nMarginTop);
+                self._welMainContent.css({position:'absolute', top:'50%', left : 0, marginTop: nMarginTop + 'px', marginLeft : 0});                            
+            }else{
+                var nMarginLeft = (htAdjustedSize.width / 2) * -1;
+//                alert(htAdjustedSize.width + " :: " + htAdjustedSize.height + " ::2 " + nMarginLeft);
+                self._welMainContent.css({position:'absolute', top:'0', left : '50%', marginTop : 0,  marginLeft: nMarginLeft + 'px'});    
+            }
+
 		};
 		this._oLastCanvas = oCanvas; 
 	},
@@ -252,14 +261,16 @@ dny.Awesome5 = jindo.$Class({
 		// 인자값 비율 계산
 		var nArgRatio = 0;
 		nArgRatio = nWidth / nHeight;
-		
+//                            alert(this._htClientSize.width / nArgRatio + " :::::: " + this._htClientSize.height + " ::: " + nArgRatio + " ::: " + nWidth + "x" + nHeight);
 		// width 기준
-		if(this._htClientSize.width / nArgRatio >= this._htClientSize.height){
+		if((this._htClientSize.width / nArgRatio) >= this._htClientSize.height){
 			htSize.width = this._htClientSize.height * nArgRatio;
 			htSize.height = this._htClientSize.height;
+            htSize.bWidthIsLonger = false;
 		}else{
 			htSize.width = this._htClientSize.width;
 			htSize.height = this._htClientSize.width / nArgRatio;
+            htSize.bWidthIsLonger = true;
 		}
 		
 		return htSize;
