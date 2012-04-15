@@ -19,6 +19,7 @@ dny.Awesome5 = jindo.$Class({
 	_htClientSize : null,
 	
 	$init : function(){
+                            alert('init');
     	this._bDeviceReady = true;
     	this._oCamera = navigator.camera;
     	

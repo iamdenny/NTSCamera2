@@ -1,3 +1,13 @@
+//var sOSName = jindo.$Agent().os().getName();
+//if( sOSName == 'iphone'){
+//    jindo.LazyLoading.load('cordova-ios-1.6.0.js',function(){
+//                        
+//                           });
+//}else if(sOSName == 'android'){
+//    jindo.LazyLoading.load('cordova-android-1.6.0.js');
+//}else{
+//    alert('Only for Android and IPhone. Sorry');
+//}
 $(document).ready(function() {   
 	
 	// Wait for PhoneGap to connect with the device
