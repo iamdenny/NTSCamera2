@@ -41,19 +41,19 @@ dny.Awesome5 = jindo.$Class({
 	    // set 'select gallery'
 	    this._welSelectGallery = jindo.$Element("select-gallery");
 	    this._wfSelectGalery = jindo.$Fn(this._onSelectGalleryClick, this).attach(this._welSelectGallery, "click");
-	    
-	    this._initWindowSize();
-	    
+
+        this._initWindowSize();
+
 	    this._initEvents();
 	},
 	
 	_initWindowSize : function(){
 		var self = this;
-		var f = jindo.$Fn(function(e){
-			//self._htClientSize = jindo.$Document(document).clientSize();
-		}, this).bind();
-		// bind함
-		jindo.m.bindRotate(f);
+//		var f = jindo.$Fn(function(e){
+//			//self._htClientSize = jindo.$Document(document).clientSize();
+//		}, this).bind();
+//		// bind함
+//		jindo.m.bindRotate(f);
 	},
 	
 	_initEvents : function(){
@@ -75,7 +75,7 @@ dny.Awesome5 = jindo.$Class({
 			}
 			self._printEffectsToContent();
 		});
-		$.mobile.fixedToolbars.setTouchToggleEnabled(false);
+		//$.mobile.fixedToolbars.setTouchToggleEnabled(false);
 		
 		$("#effectdetail").bind("pagebeforeshow", function(event, ui){
 			self._welEffectDetailContent.empty();
@@ -163,7 +163,7 @@ dny.Awesome5 = jindo.$Class({
 				//$.mobile.changePage("div#main");
                 return false;
 			}
-			self._printTheImageToContentAsImage(self._welCropContent);
+			self._printTheImageToContent(self._welCropContent);
 			self._addCropPluginToContent(self._welCropContent);
 		});		
 	},
@@ -312,7 +312,6 @@ dny.Awesome5 = jindo.$Class({
 	
 	_printEffectDetailToContent : function(){
 		var oEffects = new dny.Awesome5.Effects();
-		
 		var oCanvas = document.createElement('canvas');
 		var htAdjustedSize = this._getAdjustedSize(this._oGalleryImage.width, this._oGalleryImage.height);
 		oCanvas.width = htAdjustedSize.width;
@@ -324,9 +323,16 @@ dny.Awesome5 = jindo.$Class({
 		this._sImageDataURL = oCanvas.toDataURL("image/jpeg");
 		
 		this._welEffectDetailContent.append(oCanvas);
-		
-		var nMarginTop = (htAdjustedSize.height / 2 + 120) * -1;
-		this._welEffectDetailContent.css({position:'absolute', top:'50%', marginTop: nMarginTop + 'px'});
+
+        if(htAdjustedSize.bWidthIsLonger){
+            var nMarginTop = (htAdjustedSize.height / 2) * -1;
+//                alert(htAdjustedSize.width + " :: " + htAdjustedSize.height + " ::1 " + nMarginTop);
+            this._welEffectDetailContent.css({position:'absolute', top:'50%', left : 0, marginTop: nMarginTop + 'px', marginLeft : 0});                            
+        }else{
+            var nMarginLeft = (htAdjustedSize.width / 2) * -1;
+//                alert(htAdjustedSize.width + " :: " + htAdjustedSize.height + " ::2 " + nMarginLeft);
+            this._welEffectDetailContent.css({position:'absolute', top:'0', left : '50%', marginTop : 0,  marginLeft: nMarginLeft + 'px'});    
+        }
 		
 		this._oLastCanvas = oCanvas; 
 	},
@@ -342,8 +348,15 @@ dny.Awesome5 = jindo.$Class({
 		oContext.drawImage(this._oGalleryImage, 0, 0, oCanvas.width, oCanvas.height);
 		welContent.append(oCanvas);
 		
-		var nMarginTop = (htAdjustedSize.height / 2 + 120) * -1;
-		welContent.css({position:'absolute', top:'50%', marginTop: nMarginTop + 'px'});
+        if(htAdjustedSize.bWidthIsLonger){
+            var nMarginTop = (htAdjustedSize.height / 2) * -1;
+//                alert(htAdjustedSize.width + " :: " + htAdjustedSize.height + " ::1 " + nMarginTop);
+            welContent.css({position:'absolute', top:'50%', left : 0, marginTop: nMarginTop + 'px', marginLeft : 0});                            
+        }else{
+            var nMarginLeft = (htAdjustedSize.width / 2) * -1;
+//                alert(htAdjustedSize.width + " :: " + htAdjustedSize.height + " ::2 " + nMarginLeft);
+            welContent.css({position:'absolute', top:'0', left : '50%', marginTop : 0,  marginLeft: nMarginLeft + 'px'});    
+        }
 		
 		this._oLastCanvas = oCanvas;
 		this._nRotationDegree = 0;
@@ -353,16 +366,19 @@ dny.Awesome5 = jindo.$Class({
         var image = this._oGalleryImage; 
         var canvas = this._oLastCanvas; 
         var canvasContext = canvas.getContext("2d"); 
-        
-        var htAdjustedSize = this._getAdjustedSize(this._oGalleryImage.width, this._oGalleryImage.height);
 		
-        var width = htAdjustedSize.width;
-        var height = htAdjustedSize.height;
+        var htAdjustedSize = null;
+        var width = null;
+        var height = null;
         
         this._nRotationDegree = (this._nRotationDegree + nDegree) % 360;
         switch(this._nRotationDegree) { 
             default : 
             case 0 : 
+                htAdjustedSize = this._getAdjustedSize(this._oGalleryImage.width, this._oGalleryImage.height);
+                width = htAdjustedSize.width;
+                height = htAdjustedSize.height;
+                            
                 canvas.setAttribute('width', width); 
                 canvas.setAttribute('height', height); 
                 canvasContext.rotate(this._nRotationDegree * Math.PI / 180); 
@@ -370,26 +386,49 @@ dny.Awesome5 = jindo.$Class({
                 break; 
             case 90 :
             case -270 :
-                canvas.setAttribute('width', height); 
-                canvas.setAttribute('height', width); 
+                htAdjustedSize = this._getAdjustedSize(this._oGalleryImage.height, this._oGalleryImage.width);
+                width = htAdjustedSize.width;
+                height = htAdjustedSize.height;
+                            
+                canvas.setAttribute('width', width); 
+                canvas.setAttribute('height', height); 
                 canvasContext.rotate(this._nRotationDegree * Math.PI / 180); 
+                canvasContext.scale(width/this._oGalleryImage.height, width/this._oGalleryImage.height);
                 canvasContext.drawImage(image, 0, -image.height); 
                 break; 
             case 180 : 
             case -180 :
+                htAdjustedSize = this._getAdjustedSize(this._oGalleryImage.width, this._oGalleryImage.height);
+                width = htAdjustedSize.width;
+                height = htAdjustedSize.height;
+                            
                 canvas.setAttribute('width', width); 
                 canvas.setAttribute('height', height); 
                 canvasContext.rotate(this._nRotationDegree * Math.PI / 180); 
+                canvasContext.scale(width/this._oGalleryImage.width, width/this._oGalleryImage.width);
                 canvasContext.drawImage(image, -image.width, -image.height); 
                 break; 
             case 270 : 
             case -90 : 
-                canvas.setAttribute('width', height); 
-                canvas.setAttribute('height', width); 
+                htAdjustedSize = this._getAdjustedSize(this._oGalleryImage.height, this._oGalleryImage.width);
+                width = htAdjustedSize.width;
+                height = htAdjustedSize.height;
+                            
+                canvas.setAttribute('width', width); 
+                canvas.setAttribute('height', height); 
                 canvasContext.rotate(this._nRotationDegree * Math.PI / 180); 
+                canvasContext.scale(width/this._oGalleryImage.height, width/this._oGalleryImage.height);
                 canvasContext.drawImage(image, -image.width, 0); 
                 break; 
         }; 		
+                            
+        if(htAdjustedSize.bWidthIsLonger){
+            var nMarginTop = (htAdjustedSize.height / 2) * -1;
+            this._welRotationContent.css({position:'absolute', top:'50%', left : 0, marginTop: nMarginTop + 'px', marginLeft : 0});                            
+        }else{
+            var nMarginLeft = (htAdjustedSize.width / 2) * -1;
+            this._welRotationContent.css({position:'absolute', top:'0', left : '50%', marginTop : 0,  marginLeft: nMarginLeft + 'px'});    
+        }
 
 	},
 	
@@ -400,14 +439,14 @@ dny.Awesome5 = jindo.$Class({
 	},	
 	
 	_addCropPluginToContent : function(welContent){
-		$('#crop-content img').Jcrop({
-            onSelect:    function(){console.log("selected");},
-            bgColor:     'black',
-            bgOpacity:   .4,
-            setSelect:   [ 100, 100, 50, 50 ],
-            aspectRatio: 16 / 9
-        }, function(){
-        	this.animateTo([100,100,400,300]);
-        });
+//		$('#crop-content img').Jcrop({
+//            onSelect:    function(){console.log("selected");},
+//            bgColor:     'black',
+//            bgOpacity:   .4,
+//            setSelect:   [ 100, 100, 50, 50 ],
+//            aspectRatio: 16 / 9
+//        }, function(){
+//        	this.animateTo([100,100,400,300]);
+//        });
 	}
 });
